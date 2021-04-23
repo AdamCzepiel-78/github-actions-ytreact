@@ -20,9 +20,9 @@ Set-ItemProperty IIS:\AppPools\$iisAppPoolName -name "managedRuntimeVersion" -va
 
 ## remove old website version 
 if(!(Test-Path IIS:\Sites\$iisWebsiteName -pathType container)){
-   Remove-Item IIS:\Sites\$iisWebsiteName
+   Remove-Item IIS:\Sites\$iisWebsiteName -Confirm:$false
 }
 
 ## deploy new webseite version 
-New-Item IIS:\Sites\$iisWebsiteName -bindings $iisWebsiteBindings -physicalPath $iisWebsiteFolderPath  
+New-Item IIS:\Sites\$iisWebsiteName -bindings $iisWebsiteBindings -physicalPath $iisWebsiteFolderPath -Force
 Set-ItemProperty IIS:\Sites\$iisWebsiteName -name applicationPool -value $iisAppPoolName  
