@@ -1,3 +1,5 @@
+Import-Module WebAdministration
+
 $iisAppPoolName = "ReactPool"  
 $iisAppPoolDotNetVersion = "v4.0"  
   
