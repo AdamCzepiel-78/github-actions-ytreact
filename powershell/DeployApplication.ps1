@@ -7,7 +7,7 @@ $iisWebsiteFolderPath = "$(Get-Location)\build"
 $iisWebsiteName = "ReactApp"  
   
 $iisWebsiteBindings = @(  
-   @{protocol="http";bindingInformation="*:8000"},  
+   @{protocol="http";bindingInformation="*:8000"}  
 )  
   
 if (!(Test-Path IIS:\AppPools\$iisAppPoolName -pathType container))  
