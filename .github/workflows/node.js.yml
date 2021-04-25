@@ -1,33 +1,80 @@
-# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+# This is a basic workflow that is manually triggered
 
-name: Node.js CI
+name: Hello Actions
 
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
   pull_request:
-    branches: [ main ]
-
+    types: [ closed ]
+  
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+  
   build:
-
-    runs-on: self-hosted
-
-    strategy:
-      matrix:
-        node-version: [14.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
+    runs-on: ubuntu-latest
+    env:
+      name: Adamski
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npm test
-    - run: npm build
-    - run: npm cache clean --force
-    - run: .\powershell\DeployApplication.ps1
+    
+    - name: Run a one-line script
+      run: | 
+        echo Hello, $name!
+        echo Actor: ${{github.actor}}
+        echo Commited by: ${{github.event.commits[0].author.name}}
+  
+  dump:
+    runs-on: ubuntu-16.04
+    steps:
+      - name: Dump Github context 
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: | 
+          echo "$GITHUB_CONTEXT"
+          
+  pull_request_only:
+    runs-on: ubuntu-latest
+    if: github.event_name=='pull_request'
+    needs: build
+    env:
+      name: Joseph
+    steps:
+    
+    - name: Run a multiline script
+      run: |
+        echo Hello $name!
+        echo Add other action to build 
+        echo test, and deploy your project
+  
+  one:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - name: Dump job context
+        env:
+          JOB_CONTEXT: ${{ toJSON(job) }}
+        run: echo "$JOB_CONTEXT"
+      - name: Dump steps context
+        env:
+          STEPS_CONTEXT: ${{ toJSON(steps) }}
+        run: echo "$STEPS_CONTEXT"
+      - name: Dump runner context
+        env:
+          RUNNER_CONTEXT: ${{ toJSON(runner) }}
+        run: echo "$RUNNER_CONTEXT"
+      - name: Dump strategy context
+        env:
+          STRATEGY_CONTEXT: ${{ toJSON(strategy) }}
+        run: echo "$STRATEGY_CONTEXT"
+      - name: Dump matrix context
+        env:
+          MATRIX_CONTEXT: ${{ toJSON(matrix) }}
+        run: echo "$MATRIX_CONTEXT"
+    
+  
