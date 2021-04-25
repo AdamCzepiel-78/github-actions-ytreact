@@ -19,7 +19,6 @@ jobs:
     env:
       name: Adamski
     steps:
-    
     - name: Run a one-line script
       run: | 
         echo Hello, $name!
@@ -76,5 +75,18 @@ jobs:
         env:
           MATRIX_CONTEXT: ${{ toJSON(matrix) }}
         run: echo "$MATRIX_CONTEXT"
+
+  deploy:
+    runs-on: ubuntu-latest 
+    steps: 
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2
+      with:
+        node-version: "14"
+        check-latest: true
+    - run: npm install 
+    - run: npm test
+    - run: npm build
     
+        
   
