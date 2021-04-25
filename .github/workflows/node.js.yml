@@ -1,6 +1,6 @@
 # This is a basic workflow that is manually triggered
 
-name: Hello Actions
+name: Azure Webapp Deployment
 
 # Controls when the action will run. Workflow runs when manually triggered using the UI
 # or API.
@@ -10,6 +10,11 @@ on:
       - main
   pull_request:
     types: [ closed ]
+
+env:
+  AZURE_WEBAPP_NAME: devops-react
+  AZURE_WEBAPP_PACKAGE_PATH: '.'
+  NODE_VERSION: '14.x'
   
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -76,17 +81,30 @@ jobs:
           MATRIX_CONTEXT: ${{ toJSON(matrix) }}
         run: echo "$MATRIX_CONTEXT"
 
-  deploy:
-    runs-on: ubuntu-latest 
-    steps: 
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v2
+  deploy-to-azure:
+    runs-on: ubuntu-latest
+    steps:
+    # checkout the repo
+    - name: 'Checkout Github Action' 
+      uses: actions/checkout@master
+
+    - name: Setup Node 14.x
+      uses: actions/setup-node@v1
       with:
-        node-version: "14"
-        check-latest: true
-    - run: npm install 
-    - run: npm test
-    - run: npm build
+        node-version: ${{ env.NODE_VERSION }}
+    - name: 'npm install, build, and test'
+      run: |
+        npm install
+        npm run build --if-present
+        npm run test --if-present
+
+    - name: 'Run Azure webapp deploy action using publish profile credentials'
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_CB6D100DEE8A442C92D5A8F799D54A7D }}
+        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+
     
         
   
