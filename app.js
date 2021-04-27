@@ -19,7 +19,6 @@ app.use(express.static(path.resolve(__dirname, "./build")));
 app.use(logger('dev'));
 
 // Serve the React application
-app.use(express.static("build"));
 app.get('/', (req, res) => {
 
   res.sendFile(path.resolve(__dirname, './build', 'index.html'));
