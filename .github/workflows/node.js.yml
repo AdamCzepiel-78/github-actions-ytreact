@@ -12,7 +12,7 @@ on:
     types: [ closed ]
 
 env:
-  AZURE_WEBAPP_NAME: devops-react
+  AZURE_WEBAPP_NAME: ghs-react
   AZURE_WEBAPP_PACKAGE_PATH: '.'
   NODE_VERSION: '14.x'
   
